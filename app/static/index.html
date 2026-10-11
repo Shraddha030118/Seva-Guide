@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SevaGuide - Public Government Certificate Assistant</title>
+  <meta name="description" content="Empowering Indian citizens with step-by-step guidance, document checklists, and eligibility verification for Income, Caste, and Residence certificates.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="/" class="brand">
+      <div class="brand-icon">S</div>
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="brand-title">SevaGuide</span>
+          <span class="brand-badge">MVP</span>
+        </div>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <a href="/docs" target="_blank" class="theme-toggle" style="text-decoration: none;">
+        ⚡ API Docs
+      </a>
+      <button class="theme-toggle" id="theme-toggle-btn">
+        🌙 Dark Mode
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero">
+    <div class="hero-subtitle">Government Certificate Portal Guide</div>
+    <h1 class="hero-title">Apply For Official Certificates <br><span style="color: var(--accent-orange);">Without Confusion Or Delay</span></h1>
+    <p class="hero-description">
+      Interactive document checklists, step-by-step filing guides, and fee breakdowns for Income, Caste, and Residence certificates.
+    </p>
+
+    <!-- Search Box -->
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-input" placeholder="Search certificates (e.g. Income, Caste, Domicile, EWS)...">
+      <button class="btn btn-primary" onclick="loadServices('', document.getElementById('search-input').value)">
+        🔍 Search
+      </button>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="category-pills">
+      <button class="pill active" data-cat="All">All Certificates</button>
+      <button class="pill" data-cat="Revenue">Revenue & Welfare</button>
+      <button class="pill" data-cat="Social Justice">Social Justice & Reservation</button>
+      <button class="pill" data-cat="General Administration">Residence & Domicile</button>
+    </div>
+  </section>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <div class="services-grid" id="services-grid">
+      <!-- Dynamic service cards loaded here -->
+    </div>
+  </main>
+
+  <!-- Modal / Drawer -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="modal-title">Certificate Title</h2>
+          <p id="modal-dept" style="font-size: 0.85rem; color: var(--text-muted);"></p>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-tabs" style="padding: 0 2rem;">
+        <button class="tab-btn active" data-tab="documents" onclick="switchTab('documents')">📄 Document Checklist</button>
+        <button class="tab-btn" data-tab="steps" onclick="switchTab('steps')">🗺️ Step-by-Step Guide</button>
+        <button class="tab-btn" data-tab="eligibility" onclick="switchTab('eligibility')">✅ Official Rules</button>
+        <button class="tab-btn" data-tab="ai-eligibility" onclick="switchTab('ai-eligibility')">🤖 AI Eligibility Check</button>
+        <button class="tab-btn" data-tab="faqs" onclick="switchTab('faqs')">❓ FAQs</button>
+      </div>
+
+      <div class="modal-body" id="modal-content-area">
+        <!-- Tab contents populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Bureaucratic Term Explainer Section -->
+  <section class="main-container" style="padding-top: 1rem;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md);">
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <span style="font-size: 1.75rem;">💡</span>
+        <h2>Gemini AI Term Explainer</h2>
+        <span style="background: var(--accent-indigo-light); color: var(--accent-indigo); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px;">AI Powered</span>
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem; max-width: 700px;">
+        Confused by complicated official legal words on government portals? Ask our backend Gemini AI assistant to explain any bureaucratic term in simple citizen language.
+      </p>
+
+      <!-- Quick Chips -->
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;" id="popular-terms-container">
+        <button class="pill" onclick="explainQuickTerm('Domicile')">Domicile</button>
+        <button class="pill" onclick="explainQuickTerm('Creamy Layer')">Creamy Layer</button>
+        <button class="pill" onclick="explainQuickTerm('Non-Creamy Layer')">Non-Creamy Layer</button>
+        <button class="pill" onclick="explainQuickTerm('Self-Attestation')">Self-Attestation</button>
+        <button class="pill" onclick="explainQuickTerm('Paternal Lineage')">Paternal Lineage</button>
+        <button class="pill" onclick="explainQuickTerm('Patwari')">Patwari / Lekhpal</button>
+        <button class="pill" onclick="explainQuickTerm('Khasra')">Khasra / Khatauni</button>
+      </div>
+
+      <!-- Term Input -->
+      <div style="display: flex; gap: 0.75rem; max-width: 650px; margin-bottom: 1.5rem;">
+        <input type="text" id="term-input" class="search-input" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.75rem 1rem; flex: 1; background: var(--bg-primary);" placeholder="Type any official term (e.g., SDM, Vamshavruksha, Gazette, Lekhpal)...">
+        <button class="btn btn-primary" style="flex: 0 0 auto;" onclick="explainCustomTerm()">
+          ✨ Explain Term
+        </button>
+      </div>
+
+      <!-- Result Card -->
+      <div id="term-result-card" style="display: none; padding: 1.5rem; border-radius: var(--radius-md); background: var(--bg-primary); border: 1px solid var(--border-color); margin-top: 1rem;">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p><strong>SevaGuide</strong> &copy; 2026 Public Service MVP. Built with FastAPI &amp; MongoDB.</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

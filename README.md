@@ -1,16 +1,43 @@
-# React + Vite
+# SevaGuide
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+SevaGuide provides a React/Vite citizen portal and a FastAPI backend for guidance on Indian government certificate applications.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Python 3.10+
+- Node.js 20.19+ or 22.12+
 
-## React Compiler
+## Run the backend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From the repository root in PowerShell:
 
-## Expanding the Oxlint configuration
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item .env.example .env
+uvicorn app.main:app --reload
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The API documentation is available at `http://127.0.0.1:8000/docs` and the health endpoint at `http://127.0.0.1:8000/api/health`. Firebase Admin and Gemini credentials are optional for local development; configure them in `.env` to enable those integrations. Do not commit `.env`.
+
+## Run the frontend
+
+In a second terminal:
+
+```powershell
+npm ci
+npm run dev
+```
+
+The Vite development server runs at `http://localhost:3000` and proxies API requests to the backend. To build the frontend for the backend to serve:
+
+```powershell
+npm run build
+```
+
+## Run tests
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
